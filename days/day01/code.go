@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dreyfus92/aoc-2023/helpers"
+	"helpers"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 }
 
 func Part01() int {
-	dataInput, err := helpers.GetInput("01", false)
+	dataInput, err := helpers.GetInput("01")
 	if err != nil {
 		os.Exit(1)
 	}
@@ -40,7 +40,7 @@ func Part01() int {
 }
 
 func Part02() int {
-	dataInput, err := helpers.GetInput("01", false)
+	dataInput, err := helpers.GetInput("01")
 	if err != nil {
 		os.Exit(1)
 	}
