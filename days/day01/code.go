@@ -23,7 +23,6 @@ func Part01() int {
 		os.Exit(1)
 	}
 
-	// Remove any characters from the text field with regex
 	pattern := "[a-zA-Z]"
 	re := regexp.MustCompile(pattern)
 	cleanInput := re.ReplaceAllString(dataInput, "")
@@ -45,7 +44,6 @@ func Part02() int {
 		os.Exit(1)
 	}
 
-	// Create number mapping
 	numPair := map[string]string{
 		"one":   "1",
 		"two":   "2",
@@ -58,11 +56,9 @@ func Part02() int {
 		"nine":  "9",
 	}
 
-	// Replace words with numbers ex: on1e tw2o
 	cleanInput := dataInput
 	for k, v := range numPair {
 		safeInsertIdx := 2
-		// Silly way to do it, but shouldn't have any overlaps in the middle of a number
 		rep := k[:safeInsertIdx] + v + k[safeInsertIdx:]
 		cleanInput = strings.ReplaceAll(cleanInput, k, rep)
 	}
