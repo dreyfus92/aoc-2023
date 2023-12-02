@@ -5,5 +5,6 @@ An attempt to solve Advent of Code 2023 with Go.
 ## Usage
 
 ```bash
-go run <day>/code.go
+cd days/<day01>
+go run code.go
 ```
