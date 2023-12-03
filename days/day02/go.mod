@@ -1,3 +1,3 @@
-module day2
+module day02
 
 go 1.21.4
