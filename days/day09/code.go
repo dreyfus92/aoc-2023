@@ -1,76 +1,76 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
 	"os"
+	"slices"
+	"strconv"
 	"strings"
 )
 
 func main() {
-	p1 := Part01()
-	p2 := Part02()
-	fmt.Println("Part1 Answer:", p1)
-	fmt.Println("Part2 Answer:", p2)
+	seqs := parse("input.txt")
+
+	a1 := Part01(seqs)
+	a2 := Part02(seqs)
+	fmt.Println("Part1 Answer:", a1)
+	fmt.Println("Part2 Answer:", a2)
 }
 
-func parseLine(line string) []int {
-	var nums []int
-	for _, numStr := range strings.Fields(line) {
-		var num int
-		fmt.Sscanf(numStr, "%d", &num)
-		nums = append(nums, num)
-	}
-	return nums
-}
-
-func nextValueInHistory(history []int) int {
-	for {
-		differences := make([]int, len(history)-1)
-		allZeroes := true
-
-		for i := 0; i < len(history)-1; i++ {
-			differences[i] = history[i+1] - history[i]
-			if differences[i] != 0 {
-				allZeroes = false
-			}
-		}
-
-		if allZeroes {
-			return history[len(history)-1] + differences[0]
-		}
-
-		history = differences
-	}
-}
-
-// sumOfExtrapolations calculates the sum of extrapolated values for each history.
-func sumOfExtrapolations(histories [][]int) int {
-	sum := 0
-	for _, history := range histories {
-		sum += nextValueInHistory(history)
-	}
-	return sum
-}
-
-func Part01() int {
-	file, err := os.Open("input.txt")
+func parse(filename string) [][]int {
+	input, err := os.ReadFile(filename)
 	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	var histories [][]int
-	for scanner.Scan() {
-		line := scanner.Text()
-		histories = append(histories, parseLine(line))
+		panic(err)
 	}
 
-	return sumOfExtrapolations(histories)
+	sequences := make([][]int, 0, 256)
+	for _, l := range strings.Split(string(input), "\n") {
+		if l == "" {
+			continue
+		}
+
+		sequence := make([]int, 0, strings.Count(l, " ")+1)
+		for _, str := range strings.Split(l, " ") {
+			n, err := strconv.Atoi(str)
+			if err != nil {
+				panic(err)
+			}
+			sequence = append(sequence, n)
+		}
+
+		sequences = append(sequences, sequence)
+	}
+
+	return sequences
 }
 
-func Part02() int {
-	return 0
+func Part01(mainSequences [][]int) int {
+	pt1 := 0
+	diffs := make([]int, 0, len(mainSequences[0])-1)
+
+	for _, s := range mainSequences {
+		pt1 += s[len(s)-1]
+		hasNonZero := 1
+
+		for hasNonZero != 0 {
+			diffs = diffs[:0]
+			hasNonZero = 0
+			for i := 0; i < len(s)-1; i++ {
+				diffs = append(diffs, s[i+1]-s[i])
+				hasNonZero |= diffs[i]
+			}
+
+			pt1 += diffs[len(diffs)-1]
+			s = diffs
+		}
+	}
+
+	return pt1
+}
+
+func Part02(seqs [][]int) int {
+	for i := 0; i < len(seqs); i++ {
+		slices.Reverse(seqs[i])
+	}
+	return Part01(seqs)
 }
