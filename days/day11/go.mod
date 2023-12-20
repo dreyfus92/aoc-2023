@@ -1,3 +1,3 @@
-module day0x
+module day11
 
 go 1.21.4
